@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # dk_docs
 
 A new Flutter project.
@@ -20,3 +21,7 @@ samples, guidance on mobile development, and a full API reference.
 # dkdocs
 Google Docs Clone
 >>>>>>> a9a7f37801209525dd0e28a9ca0bc0ebcb447e76
+=======
+# dkdocs
+Google Docs clone using Flutter
+>>>>>>> ac75f1116a8fe3eba121ca8415a72a396ddaf44d
