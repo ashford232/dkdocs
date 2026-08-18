@@ -1,0 +1,97 @@
+# ================================
+# Node.js / Express
+# ================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Build / coverage
+dist/
+coverage/
+
+# Logs
+logs/
+*.log
+
+# Runtime
+*.pid
+*.pid.lock
+
+
+# ================================
+# Flutter / Dart
+# ================================
+
+# Dart
+.dart_tool/
+.pub/
+.pub-cache/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Flutter build
+/build/
+**/build/
+coverage/
+
+# Flutter generated files
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
+# Android
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# iOS
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Generated.xcconfig
+
+# Generated plugin registrants
+**/GeneratedPluginRegistrant.*
+
+# Symbolication / obfuscation
+app.*.symbols
+app.*.map.json
+
+
+# ================================
+# IDEs
+# ================================
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+# Uncomment if you don't want VS Code settings in Git
+#.vscode/
+
+
+# ================================
+# Miscellaneous
+# ================================
+
+*.class
+*.pyc
+*.swp
+.DS_Store
+Thumbs.db
+
+.atom/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
