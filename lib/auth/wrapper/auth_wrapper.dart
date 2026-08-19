@@ -2,7 +2,7 @@ import 'package:dk_docs/auth/providers/auth_provider.dart';
 import 'package:dk_docs/auth/views/login.dart';
 import 'package:dk_docs/features/home/home.dart';
 import 'package:dk_docs/shared/resources/constants.dart';
-import 'package:dk_docs/shared/ui/utils.dart';
+import 'package:dk_docs/shared/themes/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -55,8 +55,15 @@ class _AuthWrapperState extends ConsumerState<AuthWrapper> {
 
         return Home();
       },
-      error: (err, st) => Center(child: Text(err.toString())),
-      loading: () => Center(child: appIndicator(context)),
+      error: (err, st) => Scaffold(body: Center(child: Text(err.toString()))),
+      loading: () => Scaffold(
+        body: Center(
+          child: Text(
+            Constants.appName,
+            style: TextStyle(fontSize: 40, fontFamily: AppFonts.alegreya),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -8,12 +8,22 @@ Widget customTextField({
   EdgeInsets? padding,
   Set<String>? autofillHints,
   bool? obscureText,
+  double? radius,
+  Function(PointerDownEvent)? onTapOutside,
+  Function(String)? onFieldSubmitted,
+  Function(String)? onChanged,
 }) {
   final theme = Theme.of(context);
   InputBorder border = OutlineInputBorder(
-    borderRadius: .circular(30),
+    borderRadius: .circular(radius ?? 30),
     borderSide: BorderSide(
-      color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+      color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+    ),
+  );
+
+  final focusBorder = border.copyWith(
+    borderSide: BorderSide(
+      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
     ),
   );
   return Column(
@@ -30,14 +40,23 @@ Widget customTextField({
         style: TextStyle(fontSize: 15, fontWeight: .w500),
         controller: controller,
         decoration: InputDecoration(
-          hintStyle: TextStyle(fontWeight: .w300),
           contentPadding:
               padding ?? EdgeInsets.symmetric(horizontal: 12, vertical: 17),
           isCollapsed: true,
           hintText: hintText,
           border: border,
           enabledBorder: border,
+          focusedBorder: focusBorder,
         ),
+
+        onFieldSubmitted: onFieldSubmitted,
+        onTapOutside:
+            onTapOutside ??
+            (event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+
+        onChanged: onChanged,
       ),
     ],
   );

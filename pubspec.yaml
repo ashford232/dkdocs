@@ -43,6 +43,11 @@ dependencies:
   shared_preferences: ^2.5.5
   connectivity_plus: ^7.3.1
   cached_network_image: ^3.4.1
+  intl: ^0.20.2
+  flutter_quill: ^11.5.1
+  socket_io_client: ^3.1.6
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

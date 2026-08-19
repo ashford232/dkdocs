@@ -1,3 +1,5 @@
+import 'package:dk_docs/features/documents/view/document_edit_view.dart';
+import 'package:dk_docs/features/documents/view/document_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -29,7 +31,6 @@ final authRoutes = [
   GoRoute(
     path: EnterPassword.route,
     redirect: (context, state) {
-
       if (state.extra == null || state.extra is! EnterPasswordState) {
         return '/';
       }
@@ -41,30 +42,43 @@ final authRoutes = [
     },
   ),
 ];
+final documentRoutes = [
+  GoRoute(path: '/document', redirect: (_, _) => Home.route),
+  GoRoute(
+    path: DocumentView.route,
 
+    builder: (context, state) {
+      return DocumentView(documentId: state.pathParameters['id']!);
+    },
+  ),
+
+  GoRoute(
+    path: DocumentEditView.route,
+    builder: (context, state) {
+      return DocumentEditView(documentId: state.pathParameters['id']!);
+    },
+  ),
+];
 final routerProvider = Provider<GoRouter>((ref) {
   final notifier = RouterNotifier(ref);
 
   return GoRouter(
+    debugLogDiagnostics: true,
     refreshListenable: notifier,
     errorBuilder: (context, state) => ErrorPage(error: state.error),
-    routes: authRoutes,
+    routes: [...authRoutes, ...documentRoutes],
 
     redirect: (context, state) {
       final isInitializing = ref.read(userProvider).isLoading;
       final user = ref.read(userNotifierProvider);
       final isLoggedIn = user != null;
-final currentLocation = state.matchedLocation;
       final isAuthRoute =
           state.uri.path == Login.route ||
           state.uri.path == WebAuthCallback.route ||
           state.uri.path == EnterPassword.route;
 
-if (isInitializing) {
-        if (currentLocation != '/') {
-          return Home.route; 
-        }
-        return null; 
+      if (isInitializing) {
+        return null;
       }
       if (!isLoggedIn && !isAuthRoute) {
         return Login.route;

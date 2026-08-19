@@ -20,16 +20,17 @@ class AppThemes {
   static const lightDivider = Color(0xFFE7ECEC);
 
   // DARK
-  static const darkBackground = Color(0xFF101817);
-  static const darkSurface = Color(0xFF182120);
-  static const darkSurfaceVariant = Color(0xFF222D2C);
+  // DARK — NEUTRAL
+  static const darkBackground = Color(0xFF121212);
+  static const darkSurface = Color(0xFF1C1C1C);
+  static const darkSurfaceVariant = Color(0xFF262626);
 
-  static const darkText = Color(0xFFE7F0EF);
-  static const darkTextSecondary = Color(0xFFA5B5B3);
-  static const darkTextMuted = Color(0xFF71827F);
+  static const darkText = Color(0xFFF5F5F5);
+  static const darkTextSecondary = Color(0xFFA3A3A3);
+  static const darkTextMuted = Color(0xFF737373);
 
-  static const darkBorder = Color(0xFF344240);
-  static const darkDivider = Color(0xFF293634);
+  static const darkBorder = Color(0xFF333333);
+  static const darkDivider = Color(0xFF292929);
 
   // STATUS
   static const success = Color(0xFF16803C);
@@ -42,21 +43,41 @@ class AppThemes {
     brightness: Brightness.light,
     fontFamily: AppFonts.inter,
     useMaterial3: true,
-    scaffoldBackgroundColor: lightBackground,
-    colorScheme: const ColorScheme.light(
+    scaffoldBackgroundColor:
+        lightBackground, // Fixed: Using background instead of surface
+    colorScheme: const ColorScheme(
+      brightness: Brightness.light,
       primary: primary,
       onPrimary: Colors.white,
+      primaryContainer: primaryLight,
+      onPrimaryContainer: Colors.white,
       secondary: primaryLight,
       onSecondary: Colors.white,
+      secondaryContainer: lightSurfaceVariant,
+      onSecondaryContainer: primaryDark,
+      tertiary: info, // Mapped info to tertiary for extra M3 flexibility
+      onTertiary: Colors.white,
+      tertiaryContainer: Color(0xFFDBEAFE),
+      onTertiaryContainer: Color(0xFF1E40AF),
+      error: error,
+      onError: Colors.white,
+      errorContainer: Color(0xFFFEE2E2),
+      onErrorContainer: Color(0xFF991B1B),
       surface: lightSurface,
       onSurface: lightText,
       surfaceContainerHighest: lightSurfaceVariant,
-      error: error,
-      onError: Colors.white,
+      onSurfaceVariant: lightTextSecondary,
+      outline: lightBorder,
+      outlineVariant: lightDivider,
+      shadow: Colors.black,
+      scrim: Colors.black,
+      inverseSurface: lightText,
+      onInverseSurface: lightSurface,
+      inversePrimary: primaryLight,
     ),
     dividerColor: lightDivider,
     appBarTheme: const AppBarTheme(
-      backgroundColor: lightBackground,
+      backgroundColor: lightBackground, // Often matches scaffold to blend in
       foregroundColor: lightText,
       elevation: 0,
       surfaceTintColor: Colors.transparent,
@@ -66,6 +87,12 @@ class AppThemes {
       color: lightSurface,
       elevation: 0,
       margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      // Added a subtle border since elevation is 0
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: lightBorder),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
     ),
   );
 
@@ -75,16 +102,35 @@ class AppThemes {
     fontFamily: AppFonts.inter,
     useMaterial3: true,
     scaffoldBackgroundColor: darkBackground,
-    colorScheme: const ColorScheme.dark(
+    colorScheme: const ColorScheme(
+      brightness: Brightness.dark,
       primary: primaryLight,
-      onPrimary: Colors.white,
+      onPrimary: darkBackground,
+      primaryContainer: primaryDark,
+      onPrimaryContainer: primaryLight,
       secondary: primaryLight,
-      onSecondary: Colors.white,
+      onSecondary: darkBackground,
+      secondaryContainer: darkSurfaceVariant,
+      onSecondaryContainer: primaryLight,
+      tertiary: info,
+      onTertiary: Colors.white,
+      tertiaryContainer: darkSurfaceVariant,
+      onTertiaryContainer: Colors.white,
+      error: Color(0xFFF87171),
+      onError: darkBackground,
+      errorContainer: Color(0xFF7F1D1D),
+      onErrorContainer: Color(0xFFFCA5A5),
       surface: darkSurface,
       onSurface: darkText,
       surfaceContainerHighest: darkSurfaceVariant,
-      error: Color(0xFFF87171),
-      onError: Colors.white,
+      onSurfaceVariant: darkTextSecondary,
+      outline: darkBorder,
+      outlineVariant: darkDivider,
+      shadow: Colors.black,
+      scrim: Colors.black,
+      inverseSurface: darkText,
+      onInverseSurface: darkSurface,
+      inversePrimary: primary,
     ),
     dividerColor: darkDivider,
     appBarTheme: const AppBarTheme(
@@ -98,6 +144,11 @@ class AppThemes {
       color: darkSurface,
       elevation: 0,
       margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: darkBorder),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
     ),
   );
 }

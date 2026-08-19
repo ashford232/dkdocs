@@ -14,20 +14,7 @@ import authMiddleware from "../middlewares/auth.middleware.js";
 
 const authRouter = express.Router();
 
-authRouter.get("/test-deeplink", (req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-      <body>
-        <script>
-          window.location.href = "dkdocs://password";
-        </script>
 
-        <p>Opening DK Docs...</p>
-      </body>
-    </html>
-  `);
-});
 // ==============================
 // Email & Password Routes
 // ==============================

@@ -33,7 +33,7 @@ class AuthRepo {
   Future<({ErrorModel? error, UserModel? user})> signInWithGoogle() async {
     try {
       if (kIsWeb) {
-        final uri = Uri.parse("${Constants.host}/auth/google");
+        final uri = Uri.parse("${Constants.serverBaseUrl}/auth/google");
         await launchUrl(uri, mode: LaunchMode.externalApplication);
 
         return (error: null, user: null);
@@ -54,7 +54,7 @@ class AuthRepo {
   }
 
   Future<void> continueWithGitHub() async {
-    final uri = Uri.parse("${Constants.host}/auth/github");
+    final uri = Uri.parse("${Constants.serverBaseUrl}/auth/github");
     await launchUrl(uri, mode: LaunchMode.platformDefault);
   }
 
@@ -67,7 +67,7 @@ class AuthRepo {
   }) async {
     try {
       final res = await _client.post(
-        Uri.parse("${Constants.host}/auth/signup"),
+        Uri.parse("${Constants.serverBaseUrl}/auth/signup"),
         body: jsonEncode({
           "email": email,
           "password": password,
@@ -110,7 +110,7 @@ class AuthRepo {
   }) async {
     try {
       final res = await _client.post(
-        Uri.parse("${Constants.host}/auth/login"),
+        Uri.parse("${Constants.serverBaseUrl}/auth/login"),
         body: jsonEncode({"email": email, "password": password}),
         headers: {'Content-Type': 'application/json'},
       );
@@ -150,7 +150,7 @@ class AuthRepo {
         key: Constants.tokenHeaderValue,
       );
       final res = await _client.get(
-        Uri.parse("${Constants.host}/auth/me"),
+        Uri.parse("${Constants.serverBaseUrl}/auth/me"),
         headers: {
           'Content-Type': 'application/json',
           'x-auth-token': newToken ?? token ?? "",
@@ -185,7 +185,7 @@ class AuthRepo {
   ) async {
     try {
       final res = await _client.post(
-        Uri.parse("${Constants.host}/auth/emailExist"),
+        Uri.parse("${Constants.serverBaseUrl}/auth/emailExist"),
         body: jsonEncode({"email": email}),
         headers: {'Content-Type': 'application/json'},
       );
@@ -208,7 +208,7 @@ class AuthRepo {
   Future<({ErrorModel? error, UserModel? user})> authenticateMobileWithGoogle(
     String idToken,
   ) async {
-    final uri = Uri.parse("${Constants.host}/auth/google/mobile");
+    final uri = Uri.parse("${Constants.serverBaseUrl}/auth/google/mobile");
 
     final response = await _client.post(
       uri,

@@ -2,6 +2,8 @@ import 'package:dk_docs/auth/providers/auth_provider.dart';
 import 'package:dk_docs/shared/routes/go_router.dart';
 import 'package:dk_docs/shared/themes/app_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
@@ -34,8 +36,15 @@ class _MyAppState extends ConsumerState<MyApp> {
       title: 'Dk Docs',
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
-      themeMode: .light,
+      themeMode: .system,
       routerConfig: router,
+
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        FlutterQuillLocalizations.delegate,
+      ],
     );
   }
 }

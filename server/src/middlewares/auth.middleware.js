@@ -17,7 +17,6 @@ const auth = async (req, res, next) => {
         .json({ message: "INVALID AUTH TOKEN, AUTHORIZATION DENIED." });
     }
 
-    console.log(verified);
     req.userId = verified.id;
     req.token = token;
     next();

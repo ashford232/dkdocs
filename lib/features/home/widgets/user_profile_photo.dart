@@ -7,18 +7,19 @@ import 'package:flutter/material.dart';
 Widget customUserProfile({
   required BuildContext context,
   required UserModel user,
+  double? size,
 }) {
   final userColor = CustomColors.getUserColor(user.uid);
   return SizedBox(
-    width: 35,
-    height: 35,
+    width: size ?? 35,
+    height: size ?? 35,
 
     child: CachedNetworkImage(
       imageBuilder: (context, imageProvider) {
         return Container(
           clipBehavior: .hardEdge,
           width: 35,
-          height: 40,
+          height: 35,
           decoration: BoxDecoration(
             shape: .circle,
             image: DecorationImage(image: imageProvider, fit: .cover),
@@ -29,8 +30,6 @@ Widget customUserProfile({
       memCacheWidth: 70,
       memCacheHeight: 70,
 
-      maxWidthDiskCache: 70,
-      maxHeightDiskCache: 70,
       imageUrl: user.photoUrl,
       errorWidget: (context, url, error) {
         final name = user.name.trim();
@@ -39,6 +38,7 @@ Widget customUserProfile({
             ? ''
             : name.split(RegExp(r'\s+')).take(2).map((e) => e[0]).join();
         return Container(
+          padding: const .all(5),
           decoration: BoxDecoration(
             color: userColor,
 
@@ -49,7 +49,7 @@ Widget customUserProfile({
               child: Text(
                 initials,
                 style: TextStyle(
-                  fontFamily: AppFonts.hubotSans,
+                  fontFamily: AppFonts.googleSans,
                   fontSize: 25,
                   color: getTextColor(userColor),
                 ),

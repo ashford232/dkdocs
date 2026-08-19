@@ -72,8 +72,7 @@ Widget customAppButton({
             const SizedBox(width: 10),
 
             appIndicator(context),
-          ] else
-            const SizedBox(width: 10),
+          ],
 
           if (autoImplementTrailing == true) ...[Icon(Icons.arrow_forward)],
         ],
