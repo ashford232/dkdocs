@@ -1,3 +1,5 @@
+import 'package:dk_docs/app/models/document_model.dart';
+import 'package:dk_docs/features/documents/view/collaboration_view.dart';
 import 'package:dk_docs/features/documents/view/document_edit_view.dart';
 import 'package:dk_docs/features/documents/view/document_view.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +56,28 @@ final documentRoutes = [
 
   GoRoute(
     path: DocumentEditView.route,
+    redirect: (context, state) {
+      if (state.extra == null) {
+        return Home.route;
+      }
+      return null;
+    },
     builder: (context, state) {
-      return DocumentEditView(documentId: state.pathParameters['id']!);
+      final doc = state.extra as DocumentModel;
+      return DocumentEditView(document: doc);
+    },
+  ),
+  GoRoute(
+    path: CollaborativeView.route,
+    redirect: (context, state) {
+      if (state.extra == null) {
+        return Home.route;
+      }
+      return null;
+    },
+    builder: (context, state) {
+      final collaborativeState = state.extra as CollaborationState;
+      return CollaborativeView(collaborationState: collaborativeState);
     },
   ),
 ];

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dk_docs/app/models/document_model.dart';
 import 'package:dk_docs/app/providers/document_provider.dart';
 import 'package:dk_docs/features/documents/widgets/document_editor.dart';
+import 'package:dk_docs/features/documents/widgets/editor_toolbars.dart';
 import 'package:dk_docs/shared/ui/snackbar.dart';
 import 'package:dk_docs/shared/ui/text_field.dart';
 import 'package:dk_docs/shared/ui/utils.dart';
@@ -13,9 +14,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 
 class DocumentEditView extends ConsumerStatefulWidget {
-  final String documentId;
-  const DocumentEditView({super.key, required this.documentId});
-  static const route = "/document/edit/:id";
+  final DocumentModel document;
+  const DocumentEditView({super.key, required this.document});
+  static const route = "/edit";
+
   @override
   ConsumerState<DocumentEditView> createState() => _DocumentEditViewState();
 }
@@ -34,6 +36,13 @@ class _DocumentEditViewState extends ConsumerState<DocumentEditView> {
   void initState() {
     super.initState();
 
+    if (widget.document.content.isNotEmpty) {
+      _quillController.document = Document.fromJson(widget.document.content);
+    }
+
+    if (widget.document.title.isNotEmpty) {
+      _titleController.text = widget.document.title;
+    }
     _quillController.addListener(_onQuillChanged);
   }
 
@@ -55,7 +64,7 @@ class _DocumentEditViewState extends ConsumerState<DocumentEditView> {
           .read(documentRepoProvider)
           .updateDocument(
             DocumentModel(
-              id: widget.documentId,
+              id: widget.document.id,
               uid: "",
               title: title,
               content: content,
@@ -63,9 +72,11 @@ class _DocumentEditViewState extends ConsumerState<DocumentEditView> {
               updatedAt: null,
             ),
           );
+
       _lastContent = jsonEncode(content);
 
       await refreshAllDocumentsProvider(ref);
+      ref.invalidate(getDocumentProvider(widget.document.id));
     } catch (e) {
       debugPrint(e.toString());
       if (mounted) {
@@ -93,147 +104,74 @@ class _DocumentEditViewState extends ConsumerState<DocumentEditView> {
   String _lastContent = '';
   final ValueNotifier<bool> _isUpdating = ValueNotifier(false);
 
-  bool _initialized = false;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final documentAsync = ref.read(getDocumentProvider(widget.documentId));
-    return documentAsync.when(
-      data: (document) {
-        if (document == null) {
-          return Scaffold(
-            body: Center(
-              child: Text("No Document found with the id ${widget.documentId}"),
-            ),
-          );
-        }
-        //
-        if (_titleController.text.isEmpty) {
-          _titleController.text = document.title;
-        }
-        if (!_initialized) {
-          _titleController.text = document.title;
-
-          if (document.content.isNotEmpty) {
-            _quillController.document = Document.fromJson(document.content);
-          }
-
-          _lastContent = jsonEncode(document.content);
-
-          _initialized = true;
-        }
-
-        return Scaffold(
-          appBar: AppBar(
-            toolbarHeight: kIsWeb ? 80 : null,
-            titleSpacing: kIsWeb ? 5 : 0,
-            leading: kIsWeb ? leadingToHome(context) : null,
-            title: Column(
-              crossAxisAlignment: .start,
-              children: [
-                IntrinsicWidth(
-                  child: customTextField(
-                    radius: 4,
-                    padding: .all(kIsWeb ? 8 : 6),
-                    context: context,
-                    hintText: 'Untitled Document',
-                    controller: _titleController,
-                    onFieldSubmitted: (val) => updateDocument(val),
-                  ),
-                ),
-                if (kIsWeb) const SizedBox(height: 5),
-                ValueListenableBuilder<bool>(
-                  valueListenable: _isUpdating,
-                  builder: (context, isUpdating, _) {
-                    if (isUpdating) {
-                      return Row(
-                        children: [
-                          appIndicator(context, size: 5, strokeWidth: 1),
-                          const SizedBox(width: 5),
-                          const Text("Syncing", style: TextStyle(fontSize: 10)),
-                        ],
-                      );
-                    }
-
-                    return const Row(
-                      children: [
-                        Icon(Icons.check_circle_outline, size: 10),
-                        SizedBox(width: 5),
-                        Text("Saved", style: TextStyle(fontSize: 10)),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.person_add_alt),
-                style: IconButton.styleFrom(
-                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: kIsWeb ? 80 : null,
+        titleSpacing: kIsWeb ? 5 : 0,
+        leading: kIsWeb ? leadingToHome(context) : null,
+        title: Column(
+          crossAxisAlignment: .start,
+          children: [
+            IntrinsicWidth(
+              child: customTextField(
+                radius: 4,
+                padding: .all(kIsWeb ? 8 : 6),
+                context: context,
+                hintText: 'Untitled Document',
+                controller: _titleController,
+                onFieldSubmitted: (val) => updateDocument(val),
               ),
-              const SizedBox(width: 12),
-              IconButton(
-                onPressed: () async {},
-                icon: Icon(Icons.more_horiz),
-                style: IconButton.styleFrom(
-                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                ),
-              ),
-              const SizedBox(width: 12),
-            ],
-          ),
-          body: Column(
-            children: [
-              Divider(height: 1),
-              const SizedBox(height: 10),
-              if (kIsWeb)
-                Container(
-                  clipBehavior: .hardEdge,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    borderRadius: .circular(50),
-                  ),
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.all(5),
-                  child: QuillSimpleToolbar(
-                    controller: _quillController,
-                    config: QuillSimpleToolbarConfig(
-                      axis: .horizontal,
-                      multiRowsDisplay: false,
-                    ),
-                  ),
-                ),
-              DocumentEditor(quillController: _quillController),
-              if (!kIsWeb) ...[
-                Divider(height: 1),
-                Container(
-                  color: theme.colorScheme.surface,
-                  padding: const EdgeInsets.all(8.0),
-                  child: QuillSimpleToolbar(
-                    controller: _quillController,
+            ),
+            if (kIsWeb) const SizedBox(height: 5),
+            ValueListenableBuilder<bool>(
+              valueListenable: _isUpdating,
+              builder: (context, isUpdating, _) {
+                if (isUpdating) {
+                  return Row(
+                    children: [
+                      appIndicator(context, size: 5, strokeWidth: 1),
+                      const SizedBox(width: 5),
+                      const Text("Syncing", style: TextStyle(fontSize: 10)),
+                    ],
+                  );
+                }
 
-                    config: QuillSimpleToolbarConfig(
-                      axis: .horizontal,
-                      multiRowsDisplay: false,
-                    ),
-                  ),
-                ),
-              ],
-            ],
+                return const Row(
+                  children: [
+                    Icon(Icons.check_circle_outline, size: 10),
+                    SizedBox(width: 5),
+                    Text("Saved", style: TextStyle(fontSize: 10)),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            onPressed: () async {},
+            icon: Icon(Icons.more_horiz),
+            style: IconButton.styleFrom(
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
+            ),
           ),
-        );
-      },
-      error: (err, st) => Scaffold(
-        appBar: AppBar(),
-        body: Center(child: Text(err.toString())),
+          const SizedBox(width: 12),
+        ],
       ),
-      loading: () => Scaffold(
-        appBar: AppBar(),
-        body: Center(child: appIndicator(context)),
+      body: Column(
+        children: [
+          Divider(height: 1),
+          const SizedBox(height: 10),
+          if (kIsWeb) WebEditorToolbar(quillController: _quillController),
+          DocumentEditor(quillController: _quillController),
+          if (!kIsWeb) ...[
+            Divider(height: 1),
+            MobileEditorToolbar(quillController: _quillController),
+          ],
+        ],
       ),
     );
   }

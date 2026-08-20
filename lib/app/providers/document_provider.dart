@@ -20,6 +20,5 @@ final getMyDocumentsProvider = FutureProvider(
 
 Future<void> refreshAllDocumentsProvider(WidgetRef ref) async {
   ref.invalidate(getMyDocumentsProvider);
-  ref.invalidate(getDocumentProvider);
-   final _ = ref.refresh(getMyDocumentsProvider.future);
+  final _ = ref.refresh(getMyDocumentsProvider.future);
 }

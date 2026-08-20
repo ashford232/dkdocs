@@ -14,7 +14,7 @@ class DocumentRepo {
 
   Future<DocumentModel?> createDocument() async {
     try {
-      final uri = Uri.parse("${Constants.serverBaseUrl}/documents/create");
+      final uri = Uri.parse("${Constants.serverBaseRoute}/documents/create");
       final token = await _localStorageRepo.getVal(
         key: Constants.tokenHeaderValue,
       );
@@ -42,10 +42,9 @@ class DocumentRepo {
   Future<DocumentModel?> getDocument(String documentId) async {
     try {
       final uri = Uri.parse(
-        "${Constants.serverBaseUrl}/documents",
+        "${Constants.serverBaseRoute}/documents",
       ).replace(queryParameters: {'id': documentId});
       debugPrint(uri.toString());
-
       final token = await _localStorageRepo.getVal(
         key: Constants.tokenHeaderValue,
       );
@@ -58,7 +57,8 @@ class DocumentRepo {
       if (response.statusCode == 200) {
         return DocumentModel.fromMap(data);
       }
-      throw Exception(data['message'] ?? "An error occurred");
+
+      return null;
     } catch (e) {
       debugPrint(e.toString());
       throw Exception("An error occurred");
@@ -67,7 +67,7 @@ class DocumentRepo {
 
   Future<List<DocumentModel>> getMyDocuments() async {
     try {
-      final uri = Uri.parse("${Constants.serverBaseUrl}/documents/me");
+      final uri = Uri.parse("${Constants.serverBaseRoute}/documents/me");
 
       final token = await _localStorageRepo.getVal(
         key: Constants.tokenHeaderValue,
@@ -92,7 +92,7 @@ class DocumentRepo {
 
   Future<DocumentModel?> updateDocument(DocumentModel newDoc) async {
     try {
-      final uri = Uri.parse("${Constants.serverBaseUrl}/documents");
+      final uri = Uri.parse("${Constants.serverBaseRoute}/documents");
       debugPrint(uri.toString());
 
       final token = await _localStorageRepo.getVal(

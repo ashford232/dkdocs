@@ -29,10 +29,13 @@ const getDocument = async (req, res) => {
         message: "Invalid document ID",
       });
     }
-    const document = await Document.findById(id);
+    const document = await Document.findOne({
+      _id: id,
+      uid: req.userId,
+    });
 
     if (!document) {
-      return res.status(400).json({
+      return res.status(404).json({
         message: "Document not Found",
       });
     }

@@ -14,7 +14,9 @@ class Constants {
   static const String addr = "172.18.178.118";
   static const String serverVersion = "v1";
 
-  static const String serverBaseUrl = "http://$addr:$port/api/$serverVersion";
+  static const String serverBaseUrl = "http://$addr:$port";
+
+  static const String serverBaseRoute = "$serverBaseUrl/api/$serverVersion";
 
   static const String tokenHeaderValue = "x-auth-token";
 

@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import app from "./app.js";
+import server from "./app.js";
+
 
 dotenv.config();
 const PORT = process.env.PORT || 3001;
@@ -11,7 +12,7 @@ mongoose
   .connect(DB_URI)
   .then(() => {
     console.log("Database connected.");
-    app.listen(PORT, "0.0.0.0", () => {
+    server.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running at: http://localhost:${PORT}`);
     });
   })
